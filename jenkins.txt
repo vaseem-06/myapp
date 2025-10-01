@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'dockerhub-creds' // Jenkins credentials ID
-        IMAGE_NAME = 'vaseem06/myapp'              // Docker Hub repo
-        IMAGE_TAG = 'v1'                           // Tag name
+        DOCKER_HUB_CREDENTIALS = 'dockerhub-creds'
+        IMAGE_NAME = 'vaseem06/myapp'
+        IMAGE_TAG = 'v1'
         GIT_REPO = 'https://github.com/vaseem-06/myapp.git'
     }
 
