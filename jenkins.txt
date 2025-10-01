@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = 'dockerhub-creds' // Jenkins credentials ID
+        IMAGE_NAME = 'username/myapp'              // Docker Hub repo
+        IMAGE_TAG = 'v1'                           // Tag name
+        GIT_REPO = 'https://github.com/username/myapp.git'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Docker image built and pushed successfully!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
